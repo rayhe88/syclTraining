@@ -1,0 +1,11 @@
+# Linux files
+*~
+
+
+# Workspaces
+*.code-workspace
+.vscode/
+
+# Objects and compilation files
+*.o
+*.mod
