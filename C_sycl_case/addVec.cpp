@@ -3,6 +3,7 @@
 #include <vector>
 #include <new>
 #include "func.hpp"
+#include <CL/sycl.hpp>
 
 using namespace std;
 

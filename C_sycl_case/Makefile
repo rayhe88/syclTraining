@@ -1,8 +1,8 @@
-CC := icx
-CFLAGS := -fsycl -Wall -pedantic
-LDFLAGS := -lm -lstdc++ -lsycl
+CC := dpcpp
+CFLAGS :=  -Wall 
+LDFLAGS := -lm 
 
-OBJS = addVec.o func.o
+OBJS = func.o addVec.o
 
 EXE = addVec.x
 
