@@ -1,25 +1,25 @@
-CC := icx
-FC := ifort
+CC := icpx
+FC := ifx
 CFLAGS := -fsycl -Wall -pedantic
-LDFLAGS := -lm -lstdc++ -lsycl
+LDFLAGS := -lsycl -lstdc++
 
-OBJS = func_fort.o addVec.o func.o
+OBJS = func_fort.o func.o addVec.o
 
 EXE = addVec.x
 
 all: $(EXE)
 
 $(EXE): $(OBJS)
-	$(FC) $(OBJS) -o $(EXE) -lgfortran  $(LDFLAGS)
+	$(FC) -fsycl $(OBJS) -o $(EXE)  $(LDFLAGS)
 
 func_fort.o: func_fort.f90
-	$(FC) $(FFLAGS) func_fort.f90 -c
+	$(FC)  func_fort.f90 -c
 
 func.o: func.cpp func.hpp
 	$(CC) $(CFLAGS) func.cpp -c
 
-addVec.o: addVec.f90 
-	$(FC) $(FFLAGS) addVec.f90 -c  $(LDFLAGS)
+addVec.o: addVec.f90
+	$(FC) addVec.f90 -c
 
 .Phony: clean
 clean:

@@ -1,29 +1,42 @@
 #include "func.hpp"
+#include <iostream>
 #include <CL/sycl.hpp>
 
-using namespace sycl;
+namespace sycl = cl::sycl;
+
+class VectorAddKernel;
 
 void sum(int nele, double *inp1, double *inp2, double *res){
 
-    queue q;
+    sycl::queue q(sycl::default_selector{});
+
+
+    std::cout << " Running on " << q.get_device().get_info <sycl::info::device::name>()
+              << "\n\n";
 
     // Create the buffers
     size_t n = nele;
-    buffer<double, 1> a_buf(inp1, range<1>{n});
-    buffer<double, 1> b_buf(inp2, range<1>{n});
-    buffer<double, 1> c_buf(res, range<1>{n});
+    sycl::buffer<double, 1> a_buf(inp1, sycl::range<1>(n));
+    sycl::buffer<double, 1> b_buf(inp2, sycl::range<1>(n));
+    sycl::buffer<double, 1> c_buf(res , sycl::range<1>(n));
 
     // Submit the command to the queue
 
-    q.submit([&](handler &h)
-             {
-                 auto a = a_buf.get_access<access::mode::read>(h);
-                 auto b = b_buf.get_access<access::mode::read>(h);
-                 auto c = c_buf.get_access<access::mode::write>(h);
+    q.submit([&](sycl::handler &h){
+        auto a = a_buf.get_access<sycl::access::mode::read>(h);
+        auto b = b_buf.get_access<sycl::access::mode::read>(h);
+        auto c = c_buf.get_access<sycl::access::mode::write>(h);
 
-                 // Define the kernel
-                 h.parallel_for(range<1>{n}, [=](id<1> i)
-                                { c[i] = a[i] + b[i]; }); });
+        // Define the kernel
+        h.parallel_for<class VectorAddKernel> (sycl::range<1>(n), [=](sycl::id<1> idx){
+            if(idx[0] < n)
+                c[idx] = a[idx] + b[idx];
+        });
+    });
+
+    q.wait_and_throw();
+
+    return;
 }
 
 
