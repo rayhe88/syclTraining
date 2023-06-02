@@ -7,5 +7,6 @@ doing the binding with main code in Fortran.
 ## Cases
 - `C_case` : Main function in C, sum of vectors in C.
 - `C_Fort_case` : Main function in Fortran, sum of vectors in C.
-- `C_sycl_case` : Main function on C++, sum of vectors in Sycl.
-- `Fort_sycl_case` : Main function on Fortran, sum of vectors in Sycl.
+- `C_sycl_case` : Main function in C++, sum of vectors in Sycl.
+- `Fort_sycl_case` : Main function in Fortran, sum of vectors in Sycl.
+- `Fort_MKL_case` : Main function in Fortran, sum of vectors in Sycl by axpy function of MKL.
