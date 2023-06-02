@@ -27,17 +27,6 @@ void sum(int nele, double *inp1, double *inp2, double *res){
     oneapi::mkl::blas::column_major::axpy(q, nele, 1.0, a_buf, 1, b_buf,1);
     oneapi::mkl::blas::column_major::axpy(q, nele, 1.0, b_buf, 1, c_buf,1);
 
-    q.submit([&](sycl::handler &h){
-        auto b = b_buf.get_access<sycl::access::mode::read>(h);
-        auto c = c_buf.get_access<sycl::access::mode::write>(h);
-
-        // Define the kernel
-        h.parallel_for<class VectorAddKernel> (sycl::range<1>(n), [=](sycl::id<1> idx){
-            if(idx[0] < n)
-                c[idx] = b[idx];
-        });
-    });
-
     q.wait_and_throw();
 
     return;
